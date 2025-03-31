@@ -1,38 +1,56 @@
+// Get URL parameters to extract the product ID from the query string
 const urlParams = new URLSearchParams(window.location.search);
 const productDetailsId = urlParams.get("id");
+
+// Get DOM elements for product display, comments section, and comment input
 const productDetailsContainer = document.getElementById("product-container");
 const commentsSection = document.getElementById("comments-section");
 const addCommentBtn = document.getElementById("add-comment-btn");
 const commentText = document.getElementById("comment-text");
 const similarProductsContainer = document.getElementById("similar-products");
+
+// Initialize empty arrays to store product details and similar products
 let productDetailsinfo = [];
 let similarProducts = [];
 
+// When DOM is fully loaded, fetch product details and load comments
 document.addEventListener("DOMContentLoaded", () => {
   fetchProductDetails();
   loadComments();
 });
 
-// Load product details
+/**
+ * Fetches product details from the API based on the product ID
+ * Displays the product details and fetches similar products
+ */
 async function fetchProductDetails() {
   try {
+    // Fetch product details from API
     const res = await fetch(`${API_URL}/${productDetailsId}`);
     productDetailsinfo = await res.json();
 
+    // Display the product details
     displayProductDetails(productDetailsinfo);
+
+    // Fetch similar products from the same category
     fetchSimilarProducts(productDetailsinfo.category);
+
+    // Attach event handlers to add-to-cart buttons
     attachAddToCartHandlers();
   } catch (error) {
     console.error("Error fetching product:", error);
   }
 }
 
-// Display product details
+/**
+ * Displays product details in the product container
+ * @param {Object} product - The product object containing all details
+ */
 function displayProductDetails(product) {
   // Clear previous content
   productDetailsContainer.innerHTML = "";
 
-  // Apply Bootstrap container styles
+  // Add Bootstrap classes for styling the container
   productDetailsContainer.classList.add(
     "container", // Ensures responsiveness
     "mw-75", // Limits max width
@@ -48,14 +66,14 @@ function displayProductDetails(product) {
   const row = document.createElement("div");
   row.classList.add("row", "g-4"); // g-4 adds gap between columns
 
-  // Product Images Section
+  // Product Images Section (left column)
   const productImages = document.createElement("div");
   productImages.classList.add("col-lg-4", "col-md-6", "col-sm-12");
   productImages.innerHTML = `
         <img src="${product.thumbnail}" class="img-fluid rounded" alt="${product.title}">
     `;
 
-  // Product Details Section
+  // Product Details Section (right column)
   const productDetails = document.createElement("div");
   productDetails.classList.add("col-lg-8", "col-md-6", "col-sm-12");
   productDetails.innerHTML = `
@@ -98,17 +116,22 @@ function displayProductDetails(product) {
   productDetailsContainer.appendChild(row);
 }
 
-// Load comments from localStorage
+/**
+ * Loads comments from localStorage and displays them
+ */
 function loadComments() {
+  // Get comments from localStorage or initialize empty array
   const comments =
     JSON.parse(localStorage.getItem(`comments-${productDetailsId}`)) || [];
   commentsSection.innerHTML = "";
 
+  // Create and display each comment with a delete button
   comments.forEach((comment, index) => {
     const commentDiv = document.createElement("div");
     commentDiv.textContent = comment;
     commentDiv.classList.add("comment");
 
+    // Create delete button for each comment
     const deleteBtn = document.createElement("button");
     deleteBtn.innerText = "❌";
     deleteBtn.style.marginLeft = "10px";
@@ -121,47 +144,64 @@ function loadComments() {
   });
 }
 
-// Add comment
+/**
+ * Event listener for adding a new comment
+ */
 addCommentBtn.addEventListener("click", () => {
   const comment = commentText.value.trim();
-  if (!comment) return;
+  if (!comment) return; // Don't add empty comments
 
+  // Get existing comments or initialize empty array
   let comments =
     JSON.parse(localStorage.getItem(`comments-${productDetailsId}`)) || [];
+
+  // Add new comment and save to localStorage
   comments.push(comment);
   localStorage.setItem(
     `comments-${productDetailsId}`,
     JSON.stringify(comments)
   );
 
+  // Clear input and reload comments
   commentText.value = "";
   loadComments();
 });
 
-// Remove comment
+/**
+ * Removes a comment at the specified index
+ * @param {number} index - The index of the comment to remove
+ */
 function removeComment(index) {
   let comments =
     JSON.parse(localStorage.getItem(`comments-${productDetailsId}`)) || [];
-  comments.splice(index, 1);
+  comments.splice(index, 1); // Remove comment at index
   localStorage.setItem(
     `comments-${productDetailsId}`,
     JSON.stringify(comments)
   );
-  loadComments();
+  loadComments(); // Refresh comments display
 }
 
-// Fetch similar products
-
+/**
+ * Fetches similar products from the same category
+ * @param {string} category - The product category to filter by
+ */
 async function fetchSimilarProducts(category) {
+  // Fetch all products from API
   const res = await fetch(PRODUCTS_API_URL);
   const data = await res.json();
+
+  // Filter products by category and exclude current product
   similarProducts = data.products.filter(
     (product) => product.category === category && product.id != productDetailsId
   );
 
+  // Display similar products (limited by PRODUCTS_PER_PAGE)
   displayProducts(
     "similar-products",
     similarProducts.slice(0, PRODUCTS_PER_PAGE)
   );
+
+  // Attach event handlers to add-to-cart buttons
   attachAddToCartHandlers();
 }

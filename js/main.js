@@ -1,5 +1,14 @@
-const API_URL = "https://dummyjson.com/products";
-const PRODUCTS_PER_PAGE = 8;
+/**
+ *
+ * This script handles user authentication, product retrieval, and cart interactions, including:
+ * - Loading products from an API
+ * - Displaying products in different categories
+ * - Managing user authentication and navigation links
+ * - Adding products to the cart and updating the cart count
+ */
+
+const API_URL = "https://dummyjson.com/products"; // API endpoint for fetching product data
+const PRODUCTS_PER_PAGE = 8; // Number of products to display per page
 
 document.addEventListener("DOMContentLoaded", async () => {
   const authLinks = document.getElementById("auth-links");
@@ -11,6 +20,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupAuthLinks(authLinks, user);
   displayProducts("top-rated-products", products.slice(0, PRODUCTS_PER_PAGE));
   updateCartCount();
+
   if (topProductsBtn) {
     topProductsBtn.addEventListener("click", () =>
       displayProducts(
@@ -19,6 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       )
     );
   }
+
   if (salesProductsBtn) {
     salesProductsBtn.addEventListener("click", () =>
       displayProducts(
@@ -29,10 +40,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+/** Retrieves the logged-in user from localStorage */
 function getUserFromStorage() {
   return JSON.parse(localStorage.getItem("user")) || null;
 }
 
+/** Fetches product data from the API with error handling */
 async function fetchProductsSafely() {
   try {
     const res = await fetch(API_URL);
@@ -45,6 +58,11 @@ async function fetchProductsSafely() {
   }
 }
 
+/**
+ * Configures the authentication links in the navbar based on user status
+ * @param {HTMLElement} container - The container element for auth links
+ * @param {Object} user - The logged-in user object
+ */
 function setupAuthLinks(container, user) {
   if (user) {
     const loggedInTemplate = getLoggedInTemplate(user.firstName);
@@ -59,7 +77,9 @@ function setupAuthLinks(container, user) {
   }
 }
 
+/** Creates the logged-in user navigation template */
 function getLoggedInTemplate(firstName) {
+  // Cart icon and link
   const cartLink = document.createElement("a");
   const cartIcon = document.createElement("i");
   const cartCount = document.createElement("span");
@@ -67,7 +87,8 @@ function getLoggedInTemplate(firstName) {
   const logoutItem = document.createElement("li");
   const userNameLink = document.createElement("a");
   const logoutLink = document.createElement("a");
-  /*********************************************************/
+
+  // Cart elements
   cartLink.className = "nav-link position-relative";
   cartLink.href = "cart.html";
   cartLink.title = "Cart";
@@ -79,12 +100,14 @@ function getLoggedInTemplate(firstName) {
   cartCount.id = "cart-count";
   cartLink.appendChild(cartIcon);
   cartLink.appendChild(cartCount);
-  /*********************************************************/
+
+  // Username display
   userNameItem.className = "nav-item";
   userNameLink.className = "nav-link";
   userNameLink.textContent = firstName;
   userNameItem.appendChild(userNameLink);
-  /*********************************************************/
+
+  // Logout button
   logoutItem.className = "nav-item";
   logoutLink.className = "nav-link";
   logoutLink.href = "#";
@@ -92,42 +115,11 @@ function getLoggedInTemplate(firstName) {
   logoutLink.textContent = "Logout";
   logoutLink.addEventListener("click", logout);
   logoutItem.appendChild(logoutLink);
-  /*********************************************************/
+
   return [cartLink, userNameItem, logoutItem];
 }
 
-function getLoggedOutTemplate() {
-  const cartItem = document.createElement("li");
-  const cartLink = document.createElement("a");
-  const cartIcon = document.createElement("i");
-  const loginItem = document.createElement("li");
-  const loginLink = document.createElement("a");
-  const registerItem = document.createElement("li");
-  const registerLink = document.createElement("a");
-  /*********************************************************/
-  cartItem.className = "nav-item";
-  cartLink.className = "nav-link";
-  cartLink.href = "cart.html";
-  cartLink.title = "Cart";
-  cartIcon.className = "fas fa-shopping-cart";
-  cartLink.appendChild(cartIcon);
-  cartItem.appendChild(cartLink);
-  /*********************************************************/
-  loginItem.className = "nav-item";
-  loginLink.className = "nav-link";
-  loginLink.href = "login.html";
-  loginLink.textContent = "Login";
-  loginItem.appendChild(loginLink);
-  /*********************************************************/
-  registerItem.className = "nav-item";
-  registerLink.className = "nav-link";
-  registerLink.href = "register.html";
-  registerLink.textContent = "Sign Up";
-  registerItem.appendChild(registerLink);
-  /*********************************************************/
-  return [cartItem, loginItem, registerItem];
-}
-
+/** Handles user logout and clears stored data */
 function logout() {
   localStorage.removeItem("user");
   localStorage.removeItem("cart");
@@ -135,34 +127,7 @@ function logout() {
   location.reload();
 }
 
-function createProductCard(product) {
-  const col = document.createElement("div");
-  col.className = "col-lg-3 col-md-6 col-sm-12 mb-4";
-  col.innerHTML = `
-    <div class="card h-100">
-      <img src="${product.thumbnail}" class="card-img-top product-img" alt="${product.title}">
-      <div class="card-body">
-        <div class="d-flex justify-content-between mb-1">
-          <span onclick="filterCategory(this)">${product.category}</span>
-          <span class="text-danger">-${product.discountPercentage}%</span>
-        </div>
-        <div class="d-flex justify-content-between mb-1">
-          <strong>${product.title}</strong>
-          <span>$${product.price}</span>
-        </div>
-        <div class="d-flex justify-content-end mb-2">
-          <small>Available: ${product.stock}</small>
-        </div>
-        <div class="text-center">
-          <a href="product-details.html?id=${product.id}" class="btn btn-info btn-sm details">Details</a>
-          <button class="btn btn-primary btn-sm add-to-cart" data-id="${product.id}">Add to Cart</button>
-        </div>
-      </div>
-    </div>
-  `;
-  return col;
-}
-
+/** Displays a list of products within a given container */
 function displayProducts(containerId, products) {
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -173,6 +138,7 @@ function displayProducts(containerId, products) {
   attachAddToCartHandlers();
 }
 
+/** Attaches event listeners to add-to-cart buttons */
 function attachAddToCartHandlers() {
   document.querySelectorAll(".add-to-cart").forEach((button) => {
     button.addEventListener("click", (e) => {
@@ -192,20 +158,7 @@ function attachAddToCartHandlers() {
   });
 }
 
-function getCartFromStorage() {
-  return JSON.parse(localStorage.getItem("cart")) || [];
-}
-
-function updateCart(cart, productId) {
-  const existingProduct = cart.find((item) => item.id === productId);
-  if (existingProduct) {
-    existingProduct.quantity += 1;
-  } else {
-    cart.push({ id: productId, quantity: 1 });
-    console.log(cart);
-  }
-}
-
+/** Updates the cart count displayed in the navbar */
 function updateCartCount() {
   const countSpan = document.getElementById("cart-count");
   const cart = getCartFromStorage();

@@ -1,9 +1,18 @@
-// Constants
-const API_BASE_URL = "https://dummyjson.com/products";
-const CART_STORAGE_KEY = "cart";
-const USER_STORAGE_KEY = "user";
+/**
+ * Shopping Cart Functionality
+ *
+ * This script manages the shopping cart system, including:
+ * - Retrieving cart and user data from localStorage
+ * - Loading products from an API
+ * - Updating quantities and removing items
+ * - Calculating subtotal, shipping cost, and total price
+ * - Handling checkout process
+ */
 
-// DOM Elements
+const CART_STORAGE_KEY = "cart"; // Local storage key for cart items
+const USER_STORAGE_KEY = "user"; // Local storage key for user data
+
+// DOM elements
 const cartContainer = document.getElementById("cart-items");
 const subTotalElem = document.getElementById("sub-total");
 const totalPriceElem = document.getElementById("total-price");
@@ -12,37 +21,36 @@ const checkoutBtn = document.getElementById("checkout-btn");
 const addressInput = document.getElementById("address");
 const cartPageContainer = document.getElementById("cart");
 
-// Global Data
+// Retrieve cart data from localStorage
 let cart = getCartFromStorage();
 let productsData = [];
 
-// Load on DOM Ready
 document.addEventListener("DOMContentLoaded", () => {
   const user = getUserFromStorage();
   if (!user) {
-    renderLoginPrompt();
+    renderLoginPrompt(); // Prompt user to log in if not authenticated
     return;
   }
-  loadCartProducts();
+  loadCartProducts(); // Load cart items from API
   setupEventListeners();
 });
 
-/** Helper: Get cart from local storage */
+/** Retrieves cart data from localStorage */
 function getCartFromStorage() {
   return JSON.parse(localStorage.getItem(CART_STORAGE_KEY)) || [];
 }
 
-/** Helper: Save cart to local storage */
+/** Saves the updated cart to localStorage */
 function saveCartToStorage() {
   localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
 }
 
-/** Helper: Get user from local storage */
+/** Retrieves user data from localStorage */
 function getUserFromStorage() {
   return JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
 }
 
-/** Render login prompt if user is not logged in */
+/** Renders a login prompt if the user is not logged in */
 function renderLoginPrompt() {
   cartPageContainer.innerHTML = `
     <div class="d-flex justify-content-center align-items-center" style="min-height: 50vh;">
@@ -55,7 +63,7 @@ function renderLoginPrompt() {
   `;
 }
 
-/** Load product data for items in the cart */
+/** Fetches and loads products in the cart */
 async function loadCartProducts() {
   if (cart.length === 0) {
     cartContainer.innerHTML = `<p>Your cart is empty. <a href="products.html">Back to shop</a></p>`;
@@ -65,11 +73,11 @@ async function loadCartProducts() {
 
   try {
     const productFetches = cart.map((item) =>
-      fetch(`${API_BASE_URL}/${item.id}`).then((res) => res.json())
+      fetch(`${API_URL}/${item.id}`).then((res) => res.json())
     );
     const fetchedProducts = await Promise.all(productFetches);
 
-    // Merge quantity with product data
+    // Merge fetched data with cart quantities
     productsData = fetchedProducts.map((product, index) => ({
       ...product,
       quantity: cart[index].quantity,
@@ -84,7 +92,7 @@ async function loadCartProducts() {
   }
 }
 
-/** Render cart items */
+/** Renders the cart items dynamically */
 function renderCartItems() {
   cartContainer.innerHTML = "";
 
@@ -110,7 +118,7 @@ function renderCartItems() {
   setupItemEventListeners();
 }
 
-/** Set up event listeners for quantity change and item removal */
+/** Sets up event listeners for quantity changes and item removal */
 function setupItemEventListeners() {
   document.querySelectorAll(".quantity-input").forEach((input) => {
     input.addEventListener("input", (e) => {
@@ -119,7 +127,7 @@ function setupItemEventListeners() {
 
       updateCartItemQuantity(productId, newQuantity);
       updateCartSummary();
-      updateCartCount(); // If you have a cart icon count
+      updateCartCount();
     });
   });
 
@@ -127,13 +135,13 @@ function setupItemEventListeners() {
     button.addEventListener("click", () => {
       const productId = button.dataset.id;
       removeItemFromCart(productId);
-      loadCartProducts(); // Refresh UI
+      loadCartProducts();
       updateCartCount();
     });
   });
 }
 
-/** Update quantity in cart and productsData */
+/** Updates cart item quantity */
 function updateCartItemQuantity(productId, quantity) {
   const cartItem = cart.find((item) => item.id === productId);
   const productItem = productsData.find((p) => p.id == productId);
@@ -145,13 +153,13 @@ function updateCartItemQuantity(productId, quantity) {
   }
 }
 
-/** Remove item from cart */
+/** Removes an item from the cart */
 function removeItemFromCart(productId) {
   cart = cart.filter((item) => item.id !== productId);
   saveCartToStorage();
 }
 
-/** Update subtotal and total price display */
+/** Updates subtotal and total price */
 function updateCartSummary() {
   const subTotal = productsData.reduce(
     (acc, product) => acc + product.price * product.quantity,
@@ -164,7 +172,7 @@ function updateCartSummary() {
   totalPriceElem.textContent = total.toFixed(2);
 }
 
-/** Set up checkout and shipping event listeners */
+/** Sets up event listeners for shipping selection and checkout */
 function setupEventListeners() {
   shippingSelect.addEventListener("change", updateCartSummary);
 
@@ -180,9 +188,5 @@ function setupEventListeners() {
     }
 
     alert("Thank you for your purchase!");
-
-    // cart = [];
-    // saveCartToStorage();
-    // loadCartProducts();
   });
 }
