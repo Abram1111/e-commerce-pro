@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tech Store</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top grad-color">
+      <div class="container-fluid">
+        <a class="navbar-brand text-white" href="#">Tech Store</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link text-white" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="products.html">Products</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="#contact">Contact Us</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav" id="auth-links"></ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Landing Section -->
+    <div class="container-fluid p-0">
+      <div class="position-relative">
+        <img
+          src="images/land.jpeg"
+          alt="Landing"
+          class="img-fluid w-100"
+          style="height: 100vh; object-fit: cover"
+        />
+        <div class="position-absolute top-50 start-0 translate-middle-y p-4">
+          <h1>Welcome to Tech Store</h1>
+          <a href="products.html" class="btn grad-color text-white">Shop Now</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Products Section -->
+    <div class="container my-5">
+      <ul class="nav nav-tabs justify-content-center mb-4">
+        <li class="nav-item">
+          <a
+            class="nav-link active"
+            id="top-products"
+            data-bs-toggle="tab"
+            href="#top-rated"
+            >Top Rated</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            id="Sales-products"
+            data-bs-toggle="tab"
+            href="#biggest-sales"
+            >Biggest Sales</a
+          >
+        </li>
+      </ul>
+
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="top-rated">
+          <div class="row" id="top-rated-products"></div>
+        </div>
+        <div class="tab-pane fade" id="biggest-sales">
+          <div class="row" id="biggest-sales-products"></div>
+        </div>
+      </div>
+      <div class="text-center mt-4">
+        <a href="products.html" class="btn btn-secondary grad-color"
+          >More Products</a
+        >
+      </div>
+    </div>
+
+    <div id="contact" class="container-fluid py-5 grad-color">
+      <div class="container bg-white rounded p-4">
+        <h2 class="text-center mb-4 decorated-font">Contact Us</h2>
+        <div class="row align-items-stretch">
+          <div class="col-md-6 mb-3">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.835434509198!2d144.9537363153157!3d-37.81627944201995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad65d43f1f8f8fd%3A0x2b0b9d25c6a088e7!2sTech%20Store!5e0!3m2!1sen!2sau!4v1614131261035!5m2!1sen!2sau"
+              class="w-100 h-100"
+              style="border: 0; min-height: 100%"
+              allowfullscreen=""
+              loading="lazy"
+            ></iframe>
+          </div>
+          <div class="col-md-6 mb-3">
+            <h4>Send Message</h4>
+            <form class="h-100 d-flex flex-column">
+              <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" />
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" />
+              </div>
+              <div class="mb-3">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="text" class="form-control" id="phone" />
+              </div>
+              <div class="mb-3">
+                <label for="message" class="form-label">Message</label>
+                <textarea class="form-control" id="message"></textarea>
+              </div>
+              <button type="submit" class="btn text-white grad-color">
+                Submit
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="row mt-4 p-3 rounded info">
+          <div class="col-md-4">
+            <h5><i class="fas fa-map-marker-alt me-2"></i>Address</h5>
+            <p>123 Tech Street, City</p>
+          </div>
+          <div class="col-md-4">
+            <h5><i class="fas fa-phone me-2"></i>Phone</h5>
+            <p>+1234567890</p>
+          </div>
+          <div class="col-md-4">
+            <h5><i class="fas fa-envelope me-2"></i>Email</h5>
+            <p>support@techstore.com</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3">
+      <div>
+        <a
+          href="https://www.linkedin.com/in/abram-gad-hanna/"
+          target="_blank"
+          class="text-white mx-2"
+          data-bs-toggle="tooltip"
+          title="LinkedIn"
+        >
+          <i class="fab fa-linkedin"></i>
+        </a>
+        <a
+          href="https://www.facebook.com/abram.gad.1"
+          target="_blank"
+          class="text-white mx-2"
+          data-bs-toggle="tooltip"
+          title="Facebook"
+        >
+          <i class="fab fa-facebook"></i>
+        </a>
+        <a
+          href="https://github.com/Abram1111"
+          target="_blank"
+          class="text-white mx-2"
+          data-bs-toggle="tooltip"
+          title="GitHub"
+        >
+          <i class="fab fa-github"></i>
+        </a>
+        <p class="mt-2 mb-0">&copy; 2025 Abram Gad</p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

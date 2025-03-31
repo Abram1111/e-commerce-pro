@@ -1,0 +1,93 @@
+/* styles.css */
+img.product-img {
+  height: 200px;
+  object-fit: cover;
+}
+
+.card .btn {
+  margin: 2px;
+}
+
+.alert {
+  margin-top: 10px;
+}
+.grad-color {
+  background: linear-gradient(90deg, #800080, #cf3bf4) !important;
+}
+
+.info {
+  background-color: rgb(134 147 160 / 23%);
+}
+
+.details {
+  background: linear-gradient(90deg, #800080, #cf3bf4) !important;
+  color: white !important;
+  border: none;
+}
+
+.details:hover {
+  opacity: 0.9;
+}
+.nav-tabs .nav-link.active {
+  background: linear-gradient(90deg, #800080, #cf3bf4) !important;
+  color: white !important;
+  border: none;
+  border-radius: 5px;
+}
+
+.Pagination {
+  color: white !important;
+  border: none;
+  border-radius: 50% !important;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 4px;
+  font-size: 14px;
+}
+.decorated-font {
+  font-family: "Dancing Script", cursive;
+  font-size: 50px;
+  font-weight: bolder;
+  font-style: italic;
+  color: #800080;
+}
+
+.page-item.active .grad-color {
+  opacity: 0.9;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.category-item {
+  cursor: pointer;
+}
+
+.sidebar {
+  background-color: #343a40;
+  color: white;
+  min-height: 100vh;
+}
+
+.sidebar h5 {
+  color: white;
+}
+
+.sidebar .list-group-item {
+  background-color: #495057;
+  color: white;
+  border: none;
+}
+
+.sidebar .list-group-item:hover {
+  background-color: #6c757d;
+}
+
+#search-suggestions {
+  position: absolute;
+  width: 100%;
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+}
